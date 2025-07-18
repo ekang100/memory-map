@@ -1,5 +1,6 @@
 import '../styles/globals.css'
 import Navbar from '@/components/Navbar'
+import 'mapbox-gl/dist/mapbox-gl.css'
 
 export const metadata = {
   title: 'Memory Map',
@@ -8,11 +9,12 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="h-full">
-      <body className="h-full bg-[--background]">
-        <Navbar />
-        <main className="h-full">{children}</main>
-      </body>
-    </html>
+    <html lang="en" className="h-screen">
+    <body className="h-screen bg-[--background]">
+      <Navbar />
+      <main className="h-screen">{children}</main>
+    </body>
+  </html>
+
   )
 }

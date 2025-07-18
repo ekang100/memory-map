@@ -22,12 +22,13 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-[#f4faff] to-[#e2f0ff] text-center">
-      <h1 className="text-3xl font-bold text-blue-900 mb-6">Welcome to Couple Memory Map 💙</h1>
+      <h1 className="text-3xl font-bold text-blue-900 mb-6">Welcome to Memory Map 💙</h1>
+      
       <button
         onClick={handleClick}
         className="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition"
       >
-        {isLoggedIn ? 'Go to Map' : 'Login to Get Started'}
+        {isLoggedIn ? 'Go to Map' : 'Login to Continue'}
       </button>
     </div>
   )
