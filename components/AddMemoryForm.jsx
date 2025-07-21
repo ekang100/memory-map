@@ -19,12 +19,13 @@ export default function AddMemoryForm({ user }) {
         uid: user.uid,
         title,
         location,
-        coordinates: {
-          lat: parseFloat(lat),
-          lng: parseFloat(lng),
-        },
-        createdAt: new Date(),
+        notes,
+        coordinates,
+        imageUrl,
+        //mapId: user.uid, // ← link to user's map
+        createdAt: new Date()
       })
+
 
       setTitle('')
       setLocation('')

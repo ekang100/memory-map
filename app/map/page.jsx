@@ -6,6 +6,7 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import MapView from '@/components/MapView'
 import AddMemoryForm from '@/components/AddMemoryForm'
+import { doc, getDoc, setDoc } from 'firebase/firestore'
 
 export default function MapPage() {
   const [user, setUser] = useState(null)
@@ -15,9 +16,12 @@ export default function MapPage() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log("Auth state changed:", user)
       if (user) {
         setUser(user)
+        console.log("User logged in:", user.email)
       } else {
+        console.log("No user, redirecting to login")
         router.push('/login')
       }
       setLoading(false)

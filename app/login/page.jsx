@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
+import { doc, getDoc, setDoc } from 'firebase/firestore'
+import { db } from '@/lib/firebase'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -11,10 +13,11 @@ export default function LoginPage() {
   const [isNewUser, setIsNewUser] = useState(false)
   const [error, setError] = useState(null)
   const router = useRouter()
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
+      if (user && !isSubmitting) {
         router.push('/map')
       }
     })
@@ -23,15 +26,44 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setIsSubmitting(true)
     try {
+      console.log("ARHEIURH")
+      let userCredential
       if (isNewUser) {
-        await createUserWithEmailAndPassword(auth, email, password)
+        userCredential = await createUserWithEmailAndPassword(auth, email, password)
       } else {
-        await signInWithEmailAndPassword(auth, email, password)
+        userCredential = await signInWithEmailAndPassword(auth, email, password)
       }
+      console.log("U ARE HERE")
+
+      const user = userCredential.user
+      console.log("User logged in AHIRE:", user.uid)
+      const userRef = doc(db, 'users', user.uid)
+      console.log("2")
+      let docSnap
+try {
+  docSnap = await getDoc(userRef)
+  console.log("✅ Successfully retrieved docSnap")
+} catch (err) {
+  console.error("🔥 Error in getDoc:", err)
+}
+
+      console.log("User document snapshot:", docSnap)
+
+      if (!docSnap.exists()) {
+        await setDoc(userRef, {
+          email: user.email,
+          uid: user.uid,
+          createdAt: new Date(),
+        })
+        console.log('✅ User added to users collection')
+      }
+
       router.push('/map')
     } catch (err) {
       setError(err.message)
+      setIsSubmitting(false)
     }
   }
 
